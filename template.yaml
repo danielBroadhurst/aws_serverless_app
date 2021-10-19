@@ -10,7 +10,7 @@ Parameters:
     Type: String
     Description: GitHub Repository URL
     NoEcho: true
-    
+
 Resources:
   AmplifyRole:
     Type: AWS::IAM::Role
@@ -46,6 +46,7 @@ Resources:
           phases:
             preBuild:
               commands:
+                - cd front-end
                 - npm ci
             build:
               commands:
