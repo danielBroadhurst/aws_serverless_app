@@ -50,10 +50,9 @@ Resources:
                 - npm ci
             build:
               commands:
-                - cd front-end
                 - npm run build
           artifacts:
-            baseDirectory: build
+            baseDirectory: ./front-end/build
             files:
               - '**/*'
           cache:
