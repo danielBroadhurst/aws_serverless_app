@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Amplify Application
-Metadata:
 
 Parameters:
   Repository:
@@ -11,11 +10,7 @@ Parameters:
     Type: String
     Description: GitHub Repository URL
     NoEcho: true
-
-Mappings:
-
-Conditions:
-
+    
 Resources:
   AmplifyRole:
     Type: AWS::IAM::Role
