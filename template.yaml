@@ -11,6 +11,10 @@ Parameters:
     Description: GitHub Repository URL
     NoEcho: true
 
+  Domain:
+    Type: String
+    Description: Domain name to host application
+
 Resources:
   AmplifyRole:
     Type: AWS::IAM::Role
@@ -68,16 +72,93 @@ Resources:
       Description: Main Branch
       EnableAutoBuild: true
 
-  # AmplifyDomain:
-  #   Type: AWS::Amplify::Domain
-  #   Condition: UseDomainName
-  #   Properties:
-  #     DomainName: ${{self:custom.domainName}}
-  #     AppId: !GetAtt AmplifyApp.AppId
-  #     SubDomainSettings:
-  #       - Prefix: ${{self:custom.branch}}
-  #         BranchName: !GetAtt AmplifyBranch.BranchName
+  AmplifyDomain:
+    Type: AWS::Amplify::Domain
+    Properties:
+      DomainName: !Ref Domain
+      AppId: !GetAtt AmplifyApp.AppId
+      SubDomainSettings:
+        - Prefix: master
+          BranchName: !GetAtt AmplifyBranch.BranchName
 
+  # Auth Resources
+  SNSRole:
+  # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: amplifyCognitoRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: ""
+            Effect: "Allow"
+            Principal:
+              Service: "cognito-idp.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                sts:ExternalId: amplif8cc98d14_role_external_id
+      Policies:
+        -
+          PolicyName: amplif8cc98d14-sns-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - "sns:Publish"
+                Resource: "*"
+  UserPool:
+  # Created upon user selection
+  # Depends on SNS Role for Arn if MFA is enabled
+    Type: AWS::Cognito::UserPool
+    UpdateReplacePolicy: Retain
+    Properties:
+      UserPoolName: amplifyApp_userpool
+      Schema:
+        -
+          Name: email
+          Required: true
+          Mutable: true
+      AutoVerifiedAttributes:
+        - email
+      EmailVerificationMessage: Your verification code is {####}
+      EmailVerificationSubject: Verify Account
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+      MfaConfiguration: "OFF"
+      SmsVerificationMessage: Your authentication code is {####}
+      SmsAuthenticationMessage: Your authentication code is {####}
+      SmsConfiguration:
+        SnsCallerArn: !GetAtt SNSRole.Arn
+        ExternalId: amplif8cc98d14_role_external_id
+
+  UserPoolClientWeb:
+  # Created provide application access to user pool
+  # Depends on UserPool for ID reference
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      ClientName: amplif8cc98d14_app_clientWeb
+      RefreshTokenValidity: "30"
+      UserPoolId: !Ref UserPool
+    DependsOn: UserPool
+
+  
 Outputs:
+  MainBranchUrl:
+    Value: !Join [ ".", [ !GetAtt AmplifyBranch.BranchName, !GetAtt AmplifyDomain.DomainName ]]
   DefaultDomain:
     Value: !GetAtt AmplifyApp.DefaultDomain
+  
+  UserPoolId:
+    Value: !Ref UserPool
+  UserPoolClientWebId:
+    Value: !Ref UserPoolClientWeb
+  

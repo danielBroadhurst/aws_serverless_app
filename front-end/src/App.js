@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 import './App.css';
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          This has been updated.
+          Welcome to your Application.
         </p>
         <a
           className="App-link"
@@ -22,4 +23,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);
