@@ -1,8 +1,8 @@
 const awsmobile = {
   "aws_project_region": "eu-west-2",
   "aws_cognito_region": "eu-west-2",
-  "aws_user_pools_id": UserPoolId,
-  "aws_user_pools_web_client_id": UserPoolClientWebId,
+  "aws_user_pools_id": 'UserPoolId',
+  "aws_user_pools_web_client_id": 'UserPoolClientWebId',
   "oauth": {},
   "aws_cognito_login_mechanisms": [
       "PREFERRED_USERNAME"

@@ -1,5 +1,12 @@
 .App {
+  color: white;
   text-align: center;
+  padding: 3em;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 10px 10px 100px 5px rgb(0 0 0 / 24%);
+  border-radius: 3px;
+  background-color: #c9c9c9;
 }
 
 .App-logo {
@@ -26,6 +33,10 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.input-box {
+  margin: 2em;
 }
 
 @keyframes App-logo-spin {
