@@ -67,7 +67,7 @@ app.use(function (err, req, res, next) {
   res.status(500).json({ error: `Internal Serverless Error - "${err.message}"` })
 })
 
-app.listen(3000, () => console.log(`Listening on: 3000`));
+app.listen(3001, () => console.log(`Listening on: 3001`));
 module.exports.handler = serverless(app);
 
 module.exports = app

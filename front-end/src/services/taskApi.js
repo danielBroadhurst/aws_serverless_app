@@ -1,39 +1,20 @@
-import axios from 'axios';
+import api from "../utils/api";
 
 const getTasks = async () => {
-  return await axios({
-    method: 'GET',
-    url: "http://localhost:3000/tasks/"
-  })
-}
+  console.log();
+  return await api.get("/tasks/");
+};
 
 const updateTask = async (taskId, task) => {
-  return await axios({
-    method: 'PUT',
-    url: `http://localhost:3000/tasks/${taskId}`,
-    data: task
-  })
-}
+  return await api.put(`/tasks/${taskId}`, task);
+};
 
 const createTask = async (task) => {
-  return await axios({
-    method: 'POST',
-    url: `http://localhost:3000/tasks/`,
-    data: task
-  })
-}
+  return await api.post(`/tasks/`, task);
+};
 
 const deleteTask = async (taskId) => {
-  console.log("delete" + taskId);
-  return await axios({
-    method: 'DELETE',
-    url: `http://localhost:3000/tasks/${taskId}`,
-  })
-}
+  return await api.delete(`/tasks/${taskId}`);
+};
 
-export {
-  getTasks,
-  updateTask,
-  createTask,
-  deleteTask
-}
+export { getTasks, updateTask, createTask, deleteTask };

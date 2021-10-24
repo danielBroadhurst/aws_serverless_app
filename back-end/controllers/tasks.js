@@ -1,23 +1,21 @@
 const { tasks } = require("../models");
 
 const createTask = async (req, res, next) => {
-  let response;
   try {
     const { taskId, userId, description, completed } = req.body;
-    response = await tasks.createTask({ taskId, userId, description, completed });
+    await tasks.createTask({ taskId, userId, description, completed });
   } catch (error) {
     console.log(error);
     return next(error, null);
   }
-  res.status(201).json(response);
+  res.status(201).json();
 }
 
 const updateTask = async (req, res, next) => {
-  let response;
   try {
     const task = req.body;
     const {taskId} = req.params;
-    response = await tasks.updateTask(taskId, task);
+    await tasks.updateTask(taskId, task);
   } catch (error) {
     console.log(error);
     return next(error, null);
@@ -27,10 +25,9 @@ const updateTask = async (req, res, next) => {
 
 
 const deleteTask = async (req, res, next) => {
-  let response;
   try {
     const { taskId } = req.params;
-    response = await tasks.deleteTask(taskId);
+    await tasks.deleteTask(taskId);
   } catch (error) {
     console.log(error);
     return next(error, null);

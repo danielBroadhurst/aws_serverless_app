@@ -7,6 +7,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({
 });
 
 const createTask = async (task) => {
+  console.log(task);
   var params = {
     Item: {
       pk: "task",
