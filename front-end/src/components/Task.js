@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { updateTask } from "../services/taskApi";
 
-function Task({ key, taskObj, deleteTask }) {
+function Task({ taskObj, deleteTask, updateTask }) {
   const [task, setTask] = useState(taskObj);
 
   useEffect(() => {
@@ -10,7 +9,7 @@ function Task({ key, taskObj, deleteTask }) {
     }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [task, task.task]);
+  }, [task, task.task, updateTask]);
 
   function handleUpdate(value) {
     setTask({
@@ -27,7 +26,7 @@ function Task({ key, taskObj, deleteTask }) {
   }
 
   return (
-    <div className="input-box" key={key} id={task.taskId}>
+    <div className="input-box" id={task.taskId}>
       <input
         type="text"
         onChange={(evt) => handleUpdate(evt.target.value)}
@@ -38,7 +37,7 @@ function Task({ key, taskObj, deleteTask }) {
         checked={task.completed}
         onChange={() => handleCompleted(task.taskId)}
       ></input>
-      <button onClick={() => deleteTask(task.taskId)}>X</button>
+      <button className="button" onClick={() => deleteTask(task.taskId)}>X</button>
     </div>
   );
 }

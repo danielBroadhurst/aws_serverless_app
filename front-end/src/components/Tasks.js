@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
-import { createTask, deleteTask, getTasks } from "../services/taskApi";
 import { generateUuid } from "../utils/uuid";
 import Task from "./Task";
 
-const Tasks = () => {
+const Tasks = ({ taskClient, user }) => {
   const [tasks, setTasks] = useState([]);
 
-  async function loadData() {
-    return await getTasks();
-  }
-
   useEffect(() => {
-    loadData().then((resp) => setTasks(resp.data.response));
-  }, []);
+    let mounted = true;
+    taskClient.getTasks().then((response) => {
+      if (mounted) {
+        setTasks(response.data.response);
+      }
+    });
+    return () => (mounted = false);
+  }, [taskClient]);
 
   async function createNewTask() {
     const newTask = {
       taskId: generateUuid(),
-      userId: "ce4fd402-2122-4580-9f15-993b17baedd6",
+      userId: user.username,
       task: "",
       completed: false,
     };
-    await createTask(newTask);
+    await taskClient.createTask(newTask);
     setTasks([...tasks, newTask]);
   }
 
@@ -29,7 +30,7 @@ const Tasks = () => {
     setTasks(
       tasks.filter((task) => {
         if (task.taskId === taskId) {
-          deleteTask(taskId);
+          taskClient.deleteTask(taskId);
           return false;
         } else {
           return true;
@@ -37,13 +38,21 @@ const Tasks = () => {
       })
     );
   }
+
   return (
     <div>
       {tasks.length > 0 &&
-        tasks.map((task, i) => {
-          return <Task key={i} taskObj={task} deleteTask={removeTask}></Task>;
+        tasks.map((task) => {
+          return (
+            <Task
+              key={task.taskId}
+              taskObj={task}
+              deleteTask={removeTask}
+              updateTask={taskClient.updateTask}
+            ></Task>
+          );
         })}
-      <button onClick={() => createNewTask()}>Add New Task</button>
+      <button className="button" onClick={() => createNewTask()}>Add New Task</button>
     </div>
   );
 };

@@ -1,9 +1,13 @@
 import axios from "axios";
 
-const api = (function() {
+const apiClient = (function(token) {
   const instance = axios.create({
     baseURL: "http://localhost:3001",
     timeout: 1000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    }
   });
 
   return {
@@ -12,6 +16,6 @@ const api = (function() {
     put: instance.put,
     delete: instance.delete
   }
-})();
+});
 
-export default api;
+export default apiClient;

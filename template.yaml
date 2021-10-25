@@ -11,9 +11,9 @@ Parameters:
     Description: GitHub Repository URL
     NoEcho: true
 
-  Domain:
-    Type: String
-    Description: Domain name to host application
+  # Domain:
+  #   Type: String
+  #   Description: Domain name to host application
 
 Resources:
   AmplifyRole:
@@ -72,14 +72,14 @@ Resources:
       Description: Main Branch
       EnableAutoBuild: true
 
-  AmplifyDomain:
-    Type: AWS::Amplify::Domain
-    Properties:
-      DomainName: !Ref Domain
-      AppId: !GetAtt AmplifyApp.AppId
-      SubDomainSettings:
-        - Prefix: master
-          BranchName: !GetAtt AmplifyBranch.BranchName
+  # AmplifyDomain:
+  #   Type: AWS::Amplify::Domain
+  #   Properties:
+  #     DomainName: !Ref Domain
+  #     AppId: !GetAtt AmplifyApp.AppId
+  #     SubDomainSettings:
+  #       - Prefix: master
+  #         BranchName: !GetAtt AmplifyBranch.BranchName
 
   # Auth Resources
   SNSRole:
@@ -152,8 +152,8 @@ Resources:
 
   
 Outputs:
-  MainBranchUrl:
-    Value: !Join [ ".", [ !GetAtt AmplifyBranch.BranchName, !GetAtt AmplifyDomain.DomainName ]]
+  # MainBranchUrl:
+  #   Value: !Join [ ".", [ !GetAtt AmplifyBranch.BranchName, !GetAtt AmplifyDomain.DomainName ]]
   DefaultDomain:
     Value: !GetAtt AmplifyApp.DefaultDomain
   
